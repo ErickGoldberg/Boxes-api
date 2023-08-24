@@ -1,9 +1,11 @@
 ﻿using boxes_api.Data.Enum;
+using System.ComponentModel.DataAnnotations;
 
 namespace boxes_api.Data
 {
     public class Cashiers
     {
+        [Required(ErrorMessage = "O Id é obrigatório!")]
         public int Id { get; }
         public int RefferedBy { get; set; }
         public string Name { get; set; }
@@ -24,5 +26,6 @@ namespace boxes_api.Data
         //public Photo { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        //public ICollection<Event> Events { get; set; }
     }
 }

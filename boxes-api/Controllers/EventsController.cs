@@ -17,7 +17,7 @@ namespace boxes_api.Controllers
         }
 
         [HttpGet("{id}")] //"/api/events/1"
-        public ActionResult<IQueryable<Event>> GetEventsById(int id)
+        public ActionResult<IQueryable<Event>> GetEventsById([FromQuery]int id)
         {
             var _event = events.FirstOrDefault(e => e.Id == id);
 
@@ -28,14 +28,14 @@ namespace boxes_api.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddEvents(Event _event)
+        public ActionResult AddEvents([FromBody]Event _event)
         {
             events.Add(_event);
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public ActionResult PutEvents(int id, Event eventUpdated)
+        public ActionResult PutEvents([FromQuery]int id, [FromBody]Event eventUpdated)
         {
             var _event = events.FirstOrDefault(_e => _e.Id == id);
 
@@ -64,7 +64,7 @@ namespace boxes_api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult DeleteEvents(int id)
+        public ActionResult DeleteEvents([FromQuery]int id)
         {
             var _event = events.FirstOrDefault(_e => _e.Id == id);
 

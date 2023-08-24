@@ -1,7 +1,10 @@
-﻿namespace boxes_api.Data
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace boxes_api.Data
 {
     public class Event
     {
+        [Required(ErrorMessage = "O Id é obrigatório!")]
         public int Id { get; }
         public string HeadNumber { get; set; }
         // head number (FK - id da tabela de cashiers para saber o rep do evento)
@@ -21,5 +24,7 @@
         public string Cep { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        //public int CashierId { get; set; }
+        //public Cashiers Cashier { get; set; }
     }
 }
