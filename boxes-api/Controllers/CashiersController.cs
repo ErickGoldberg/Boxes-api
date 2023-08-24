@@ -3,8 +3,8 @@
 namespace boxes_api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class CashiersController : Controller
+    [Route("api/[controller]")]
+    public class CashiersController : ControllerBase
     {
         //[HttpGet]
     }

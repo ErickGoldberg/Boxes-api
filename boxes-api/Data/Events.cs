@@ -1,6 +1,6 @@
 ﻿namespace boxes_api.Data
 {
-    public class Events
+    public class Event
     {
         public int Id { get; }
         public string HeadNumber { get; set; }
