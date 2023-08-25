@@ -1,79 +1,76 @@
-﻿using boxes_api.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using boxes_api.Data; // Certifique-se de incluir o namespace onde o contexto e a entidade do banco de dados estão definidos
+using boxes_api.DbConnection;
 
 namespace boxes_api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")] // "/api/events"
+    [Route("api/[controller]")]
     public class EventsController : ControllerBase
     {
-        private static List<Event> events = new List<Event>();
+        private readonly BoxesContext _context;
 
-        [HttpGet]
-        public ActionResult<IQueryable<Event>> GetEvents()
+        public EventsController(BoxesContext context)
         {
-            var query = events.AsQueryable();
-            return Ok(query);
+            _context = context;
         }
 
-        [HttpGet("{id}")] //"/api/events/1"
-        public ActionResult<IQueryable<Event>> GetEventsById([FromQuery]int id)
+        [HttpGet]
+        public async Task<ActionResult<IQueryable<Event>>> GetEvents()
         {
-            var _event = events.FirstOrDefault(e => e.Id == id);
+            var events = await _context.Events.ToListAsync();
+            return Ok(events);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IQueryable<Event>>> GetEventById(int id)
+        {
+            var _event = await _context.Events.FindAsync(id);
 
             if (_event == null)
-                return NotFound();
+              return NotFound();
 
             return Ok(_event);
         }
 
         [HttpPost]
-        public ActionResult AddEvents([FromBody]Event _event)
+        public async Task<ActionResult> AddEvent(Event _event)
         {
-            events.Add(_event);
+            _context.Events.Add(_event);
+            await _context.SaveChangesAsync();
+
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public ActionResult PutEvents([FromQuery]int id, [FromBody]Event eventUpdated)
+        public async Task<ActionResult> PutEvent(int id, Event eventUpdated)
         {
-            var _event = events.FirstOrDefault(_e => _e.Id == id);
+            var _event = await _context.Events.FindAsync(id);
 
             if (_event == null)
-                return NotFound();
+              return NotFound();
 
-            _event.HeadNumber = eventUpdated.HeadNumber;
-            _event.Name = eventUpdated.Name;
-            _event.Date = eventUpdated.Date;
-            _event.Payment = eventUpdated.Payment;
-            _event.Comission = eventUpdated.Comission;
-            _event.Security = eventUpdated.Security;
-            _event.Bar = eventUpdated.Bar;
-            _event.Place = eventUpdated.Place;
-            _event.Address = eventUpdated.Address;
-            _event.Number = eventUpdated.Number;
-            _event.Neighboorhood = eventUpdated.Neighboorhood;
-            _event.City = eventUpdated.City;
-            _event.State = eventUpdated.State;
-            _event.Cep = eventUpdated.Cep;
-            _event.UpdatedAt = DateTime.UtcNow;
-            //_event.CreatedAt = eventUpdated.CreatedAt; Não precisa porque vai ser DateTime.Now(Imutável)
-            // Não usei reflection(mais conciso e genérico) para ter uma performance melhor
+            await _context.SaveChangesAsync();
 
             return Ok(_event);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult DeleteEvents([FromQuery]int id)
+        public async Task<ActionResult> DeleteEvent(int id)
         {
-            var _event = events.FirstOrDefault(_e => _e.Id == id);
+            var _event = await _context.Events.FindAsync(id);
 
             if (_event == null)
-                return NotFound();
+              return NotFound();
 
-            events.Remove(_event);
+            _context.Events.Remove(_event);
+            await _context.SaveChangesAsync();
+
             return NoContent();
         }
     }
-
 }
