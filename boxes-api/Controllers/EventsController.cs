@@ -47,7 +47,7 @@ namespace boxes_api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> PutEvent(int id, Event eventUpdated)
+        public async Task<ActionResult> UpdateEvent(int id, Event eventUpdated)
         {
             var _event = await _context.Events.FindAsync(id);
 

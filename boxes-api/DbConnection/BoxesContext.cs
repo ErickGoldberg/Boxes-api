@@ -15,15 +15,11 @@ namespace boxes_api.DbConnection
         public DbSet<Cashiers> Cashiers { get; set; }
         public DbSet<Event> Events { get; set; }
 
-        // Passar os relacionamentos
-        /* 
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configurações de relacionamento, chaves primárias e estrangeiras, etc.
-            // Ex:
-            // modelBuilder.Entity<Cashier>().HasMany(c => c.Events).WithOne(e => e.Cashier);
-            // modelBuilder.Entity<Event>().HasOne(e => e.Cashier).WithMany(c => c.Events);
+             modelBuilder.Entity<Cashiers>().HasMany(c => c.Events).WithOne(e => e.Cashier);
+             modelBuilder.Entity<Event>().HasOne(e => e.Cashier).WithMany(c => c.Events);
         }
-        */
     }
 }
