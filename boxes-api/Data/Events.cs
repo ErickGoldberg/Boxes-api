@@ -28,5 +28,6 @@ namespace boxes_api.Data
         public DateTime UpdatedAt { get; set; }
         public int CashierId { get; set; }
         public Cashiers Cashier { get; set; }
+        public ICollection<CashierEvent> CashierEvents { get; set; }
     }
 }

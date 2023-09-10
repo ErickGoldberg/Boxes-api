@@ -29,5 +29,6 @@ namespace boxes_api.Data
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public ICollection<Event> Events { get; set; }
+        public ICollection<CashierEvent> CashierEvents { get; set; }
     }
 }
