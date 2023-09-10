@@ -8,14 +8,17 @@ namespace boxes_api.Data
     {
         [Required(ErrorMessage = "O Id é obrigatório!")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public int Id { get; set; }
         public int RefferedBy { get; set; }
         public string Name { get; set; }
         public string Cpf { get; set; }
         public string Rg { get; set; }
         public DateTime Birthday { get; set; }
+        [EmailAddress(ErrorMessage = "O campo Email não é um endereço de email válido.")]
         public string Email { get; set; }
-        public string Cellphone { get; set; }
+        [Phone]
+        public string Phone { get; set; }
         public string Place { get; set; }
         public string Neighboorhood { get; set; }
         public string City { get; set; }

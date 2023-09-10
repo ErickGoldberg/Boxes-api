@@ -1,11 +1,16 @@
 
 
+using boxes_api.Data;
 using boxes_api.DbConnection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<BoxesContext>(opts => opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<BoxesContext>(opts => opts.UseSqlServer(builder.Configuration.GetConnectionString("BoxesConnection")));
+builder.Services.AddDbContext<UserContext>(opts => opts.UseSqlServer(builder.Configuration.GetConnectionString("UserConnection")));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<UserContext>().AddDefaultTokenProviders();
 
 // Add services to the container.
 
