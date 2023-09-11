@@ -9,7 +9,7 @@ namespace boxes_api.DbConnection
     {
         public UserContext(DbContextOptions<UserContext> options)
             : base(options)
-        {
+        {  
         }
 
         public DbSet<IdentityUser> User { get; set; }

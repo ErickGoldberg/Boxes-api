@@ -9,26 +9,28 @@ using Microsoft.AspNetCore.Identity;
 namespace boxes_api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly UserContext _context;
+        private readonly UserContext _userContext;
+        private SignInManager<IdentityUser> _signInManager;
 
-        public UserController(UserContext context)
+        public UserController(UserContext context, SignInManager<IdentityUser> signInManager)
         {
-            _context = context;
+            _userContext = context;
+            _signInManager = signInManager;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<IdentityUser>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            return await _userContext.Users.ToListAsync();
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<IdentityUser>> GetUser(string id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userContext.Users.FindAsync(id);
 
             if (user == null)
                 return NotFound();
@@ -39,8 +41,8 @@ namespace boxes_api.Controllers
         [HttpPost]
         public async Task<ActionResult<IdentityUser>> PostUser(IdentityUser user)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            _userContext.Users.Add(user);
+            await _userContext.SaveChangesAsync();
 
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
@@ -51,11 +53,11 @@ namespace boxes_api.Controllers
             if (id != user.Id)
                 return BadRequest();
 
-            _context.Entry(user).State = EntityState.Modified;
+            _userContext.Entry(user).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _userContext.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -71,19 +73,30 @@ namespace boxes_api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userContext.Users.FindAsync(id);
             if (user == null)
                 return NotFound();
 
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            _userContext.Users.Remove(user);
+            await _userContext.SaveChangesAsync();
 
             return NoContent();
         }
 
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(UserLogin userLogin)
+        {
+            var result = await _signInManager.PasswordSignInAsync(userLogin.UserName, userLogin.Password, false, false);
+
+            if (!result.Succeeded)
+                throw new ApplicationException("Usuário não autenticado!");
+
+            return Ok("Usuário autenticado");
+        }
+
         private bool UserExists(string id)
         {
-            return _context.Users.Any(e => e.Id == id);
+            return _userContext.Users.Any(e => e.Id == id);
         }
     }
 }
